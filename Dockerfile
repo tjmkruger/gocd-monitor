@@ -1,12 +1,13 @@
-FROM alpine:3.5
-
-RUN apk add --update nodejs
+FROM node:8-alpine
 
 WORKDIR /var/www/gocd_monitor
 
-COPY . .
+COPY package.json .
+COPY package-lock.json .
 
 RUN npm install
+
+COPY . .
 
 EXPOSE 3000
 
