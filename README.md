@@ -17,6 +17,9 @@ Build monitor for Go cd build server https://www.go.cd/
 ![Pipeline explanation](https://github.com/karmats/gocd-monitor/blob/gh-pages/images/pipeline-expl.png?raw=true)
 
 ## Setup
+
+### Local
+
 Open app-config.js and change the three lines
 ```   
 // Url for your go server
@@ -34,6 +37,32 @@ npm start
 Go to `http://localhost:3000`
 
 Enjoy :)
+
+### Docker
+
+Building the image:
+```
+docker build -t gocd-monitor .
+```
+
+Using a GoCD server on your network
+```
+docker run -d --name gocd-monitor -p 3000:3000 \
+  -e GO_SERVER_URL=http://gocd.yourdomain.com:8153 \
+  -e GO_USER=xx \
+  -e GO_PASSWORD=xx \
+  gocd-monitor
+```
+
+Using a GoCD server running in docker
+```
+docker run -d --name gocd-monitor -p 3000:3000 \
+  -e GO_SERVER_URL=http://$(docker inspect --format='{{(index (index .NetworkSettings.IPAddress))}}' gocd-server):8153 \
+  -e GO_USER=xx \
+  -e GO_PASSWORD=xx \
+  gocd-monitor
+```
+Go to `http://localhost:3000`
 
 ## Configuration
 Go to `http://localhost:3000?admin` and click the settings button in the bottom-right corner to open the configuration dialog.
