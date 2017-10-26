@@ -9,7 +9,11 @@ import CucumberParser from '../utils/CucumberParser';
 export default class GoService {
 
   constructor() {
-    this.goConfig = new GoConfig(conf.goServerUrl, conf.goUser, conf.goPassword);
+    this.goConfig = new GoConfig(
+      process.env.GO_SERVER_URL || conf.goServerUrl,
+      process.env.GO_USER || conf.goUser,
+      process.env.GO_PASSWORD ||conf.goPassword
+    );
     this.clients = [];
     this.pipelines = [];
     this.pipelineNames = [];
@@ -104,7 +108,7 @@ export default class GoService {
 
   /**
    * Adds tests from a pipeline. Retrieves all test report files and saves it to db
-   * 
+   *
    * @param {string} pipeline The pipeline to get the test reports from
    */
   addPipelineTests(pipeline) {
@@ -138,7 +142,7 @@ export default class GoService {
 
   /**
    * Update test results if needed
-   * 
+   *
    * @param {Array<Object>}   pipelines   Pipelines to check for new tests
    */
   updateTestResults(pipelines) {
@@ -163,7 +167,7 @@ export default class GoService {
               if (stage.name === result.stage && stage.status !== 'building') {
                 for (let j = 0; j < stage.jobresults.length; j++) {
                   const job = stage.jobresults[j];
-                  // If scheduled job time is after time of latest test 
+                  // If scheduled job time is after time of latest test
                   if (job.name === result.job && job.scheduled > latestTestTime) {
                     return {
                       testId: result._id,
